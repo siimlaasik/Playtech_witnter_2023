@@ -113,7 +113,6 @@ class PlayerTest {
         player.setGamesPlayed(50);
         player.setGamesWon(25);
 
-        System.out.println(player.createPlayerString());
         assertEquals(correctResult, player.createPlayerString());
     }
 
@@ -124,8 +123,20 @@ class PlayerTest {
         player.setBalance(50);
         player.setGamesPlayed(50);
         player.setGamesWon(25);
-        System.out.println(player.createPlayerString());
         String string = player.createPlayerString().substring(7, 11);
+
         assertEquals("0.50", string);
+    }
+
+    @Test
+    void hasNotBetOnMatchYetReturnsFalseIfMatchAlreadyBetOn() {
+        Player player = new Player("123");
+        Move move = new Move("BET", "matchid", "20", "A");
+        Move move2 = new Move("BET", "matchid", "10", "B");
+
+        player.addMove(move);
+        player.addMove(move2);
+
+        assertFalse(player.hasNotBetOnMatchYet(move2));
     }
 }

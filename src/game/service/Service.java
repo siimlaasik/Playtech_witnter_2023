@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Service {
-     private int balance = 0;
+     private long balance = 0L;
      private final Map<String, Player> players = new HashMap<>();
      private final Map<String, Match> matches = new HashMap<>();
 
@@ -72,9 +72,9 @@ public class Service {
 
     public void makePlayerMoves() {
         for (Player player: players.values()) {
-            int casinoStartingBalance = balance;
+            long casinoStartingBalance = balance;
             for (Move move : player.getMoves()) {
-                if (move.operationIsValid() && player.getWrongMove() == null) {
+                if (move.operationIsValid() && player.getWrongMove() == null && player.hasNotBetOnMatchYet(move)) {
                     switch (move.getOperation()) {
                         case "DEPOSIT":
                             deposit(player, move);
@@ -178,11 +178,11 @@ public class Service {
         return resultStringBuilder.toString();
     }
 
-    public int getBalance() {
+    public long getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(long balance) {
         this.balance = balance;
     }
 

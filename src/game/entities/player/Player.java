@@ -9,7 +9,7 @@ import java.util.UUID;
 import java.math.*;
 
 public class Player {
-    private int balance = 0;
+    private long balance = 0L;
     private final String id;
     private int gamesPlayed;
     private int gamesWon;
@@ -66,6 +66,15 @@ public class Player {
         return  new BigDecimal(gamesWon).divide(new BigDecimal(gamesPlayed), 2, RoundingMode.HALF_UP);
     }
 
+    public boolean hasNotBetOnMatchYet(Move move) {
+        for (Move moveAll : moves) {
+            if (!move.getMatchID().isEmpty() && move.getMatchID().equals(moveAll.getMatchID()) && moves.indexOf(move) > moves.indexOf(moveAll)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public UUID getUUID() {
         return UUID.fromString(id);
     }
@@ -74,11 +83,11 @@ public class Player {
         moves.add(move);
     }
 
-    public int getBalance() {
+    public long getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(long balance) {
         this.balance = balance;
     }
 

@@ -197,19 +197,6 @@ class ServiceTest {
 
         assertNotNull(player.getWrongMove());
     }
-    @Test
-    void makePlayerMovesWithdrawRemovesPlayerBalance() {
-        String match_data_string = "test_resources/test_match_data2.txt";
-        String player_data_string = "test_resources/test_player_data4.txt";
-
-        Service service = new Service();
-
-        service.readFiles(player_data_string, match_data_string);
-        service.makePlayerMoves();
-        Player player = service.getPlayers().get("163f23ed-e9a9-4e54-a5b1-4e1fc86f12ff");
-
-        assertEquals(2000, player.getBalance());
-    }
 
     @Test
     void makePlayerMovesBetPlayerNotEnoughBalanceAddsWrongMove() {
@@ -224,6 +211,21 @@ class ServiceTest {
 
         assertNotNull(player.getWrongMove());
     }
+
+    @Test
+    void makePlayerMovesBetPlayerAlreadyBetOnGame() {
+        String match_data_string = "test_resources/test_match_data2.txt";
+        String player_data_string = "test_resources/test_player_data8.txt";
+
+        Service service = new Service();
+
+        service.readFiles(player_data_string, match_data_string);
+        service.makePlayerMoves();
+        Player player = service.getPlayers().get("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fa");
+
+        assertNotNull(player.getWrongMove());
+    }
+
 
     @Test
     void makePlayerMovesBetZeroOrLessSetsWrongMove() {
@@ -291,7 +293,7 @@ class ServiceTest {
         service.readFiles(player_data_string, match_data_string);
         service.makePlayerMoves();
 
-        assertEquals(0, service.getBalance());
+        assertEquals(-2000, service.getBalance());
     }
 
     @Test
@@ -331,9 +333,8 @@ class ServiceTest {
 
         service.readFiles(player_data_string, match_data_string);
         service.makePlayerMoves();
-        Player player = service.getPlayers().get("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fa");
 
-        assertEquals(0, service.getBalance());
+        assertEquals(-2000, service.getBalance());
     }
 
     @Test
@@ -348,19 +349,6 @@ class ServiceTest {
         Player player = service.getPlayers().get("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fa");
 
         assertEquals(8000, player.getBalance());
-    }
-
-    @Test
-    void makePlayerMovesBetDrawReturnsMoneyToService() {
-        String match_data_string = "test_resources/test_match_data2.txt";
-        String player_data_string = "test_resources/test_player_data5.txt";
-
-        Service service = new Service();
-
-        service.readFiles(player_data_string, match_data_string);
-        service.makePlayerMoves();
-
-        assertEquals(0, service.getBalance());
     }
 
     @Test
@@ -383,12 +371,12 @@ class ServiceTest {
         String player_data_string = "test_resources/test_player_data6.txt";
         List<String> result = new ArrayList<>();
 
-        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fa 2000 1.00");
-        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fe 6000 1.00");
+        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fa 4000 1.00");
+        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fe 8000 1.00");
         result.add("");
         result.add("");
         result.add("");
-        result.add("-4000");
+        result.add("-8000");
         Service service = new Service();
         service.readFiles(player_data_string, match_data_string);
         service.makePlayerMoves();
@@ -396,7 +384,7 @@ class ServiceTest {
 
         try {
             // Read all lines from the file into a List<String>
-            List<String> lines = Files.readAllLines(Paths.get("result.txt"));
+            List<String> lines = Files.readAllLines(Paths.get("src/game/result.txt"));
             assertEquals(result, lines);
         } catch (IOException e) {
             System.err.println("unable to read result.txt");
@@ -422,7 +410,7 @@ class ServiceTest {
 
         try {
             // Read all lines from the file into a List<String>
-            List<String> lines = Files.readAllLines(Paths.get("result.txt"));
+            List<String> lines = Files.readAllLines(Paths.get("src/game/result.txt"));
             assertEquals(result, lines);
         } catch (IOException e) {
             System.err.println("unable to read result.txt");
@@ -437,7 +425,7 @@ class ServiceTest {
 
         result.add("");
         result.add("");
-        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fa BET a3815c17-9def-4034-a21e-65369f6d4a56 2000 B");
+        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fa BET a3815c17-9def-4034-a21e-65369f6d4a56 4000 B");
         result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fe DEPOSIT null 0 null");
         result.add("");
         result.add("0");
@@ -448,7 +436,7 @@ class ServiceTest {
 
         try {
             // Read all lines from the file into a List<String>
-            List<String> lines = Files.readAllLines(Paths.get("result.txt"));
+            List<String> lines = Files.readAllLines(Paths.get("src/game/result.txt"));
             assertEquals("0", lines.get(lines.size() - 1));
         } catch (IOException e) {
             System.err.println("unable to read result.txt");
@@ -474,7 +462,7 @@ class ServiceTest {
 
         try {
             // Read all lines from the file into a List<String>
-            List<String> lines = Files.readAllLines(Paths.get("result.txt"));
+            List<String> lines = Files.readAllLines(Paths.get("src/game/result.txt"));
             assertEquals(result, lines);
         } catch (IOException e) {
             System.err.println("unable to read result.txt");
@@ -500,7 +488,7 @@ class ServiceTest {
 
         try {
             // Read all lines from the file into a List<String>
-            List<String> lines = Files.readAllLines(Paths.get("result.txt"));
+            List<String> lines = Files.readAllLines(Paths.get("src/game/result.txt"));
             assertEquals(result, lines);
         } catch (IOException e) {
             System.err.println("unable to read result.txt");
@@ -512,21 +500,21 @@ class ServiceTest {
         String match_data_string = "test_resources/test_match_data2.txt";
         String player_data_string = "test_resources/test_player_data6.txt";
         List<String> result = new ArrayList<>();
-
-        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fa 2000 1.00");
-        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fe 6000 1.00");
-        result.add("");
-        result.add("");
-        result.add("");
-        result.add("-4000");
         Service service = new Service();
+
+        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fa 4000 1.00");
+        result.add("163f23ed-e9a9-4e54-a5b1-4e1fc86f12fe 8000 1.00");
+        result.add("");
+        result.add("");
+        result.add("");
+        result.add("-8000");
         service.readFiles(player_data_string, match_data_string);
         service.makePlayerMoves();
         service.writeResults();
 
         try {
             // Read all lines from the file into a List<String>
-            List<String> lines = Files.readAllLines(Paths.get("result.txt"));
+            List<String> lines = Files.readAllLines(Paths.get("src/game/result.txt"));
             assertEquals(result, lines);
         } catch (IOException e) {
             System.err.println("unable to read result.txt");
